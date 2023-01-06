@@ -15,6 +15,7 @@ const AVAILABLE_WORDS: [&str; 5] = [
 
 const MAX_TRIES: i32 = 10;
 
+// TODO: Split the game functionality from the main function. Just call a new one name "start_game" or something
 fn main() {
     let word = select_word();
     print!("-- Word to play: [{}]-- \n", word);
@@ -22,6 +23,7 @@ fn main() {
     let mut word_as_map = transform_word_to_map(word.to_string());
 
     loop {
+        // TODO: Create a function that check each value of map and if all of them are 0 then the user won the game
         if remaining_tries < 1 {
             break println!("You lost!");
         }
