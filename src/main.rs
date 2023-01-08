@@ -15,7 +15,6 @@ const AVAILABLE_WORDS: [&str; 5] = [
 
 const MAX_TRIES: i32 = 2;
 
-// TODO: Split the game functionality from the main function. Just call a new one name "start_game" or something
 fn main() {
     loop {
         let win_game = play();
