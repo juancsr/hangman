@@ -13,10 +13,27 @@ const AVAILABLE_WORDS: [&str; 5] = [
     "laptop",
 ];
 
-const MAX_TRIES: i32 = 10;
+const MAX_TRIES: i32 = 2;
 
 // TODO: Split the game functionality from the main function. Just call a new one name "start_game" or something
 fn main() {
+    loop {
+        let win_game = play();
+        if !win_game {
+            println!("End of game");
+        }
+        println!("Would you like to restart? [Y/n]");
+        let user_input = read_user_input();
+        println!("user_input: {}", user_input);
+        if user_input.chars().next() != Some('Y') {
+            println!("finishing the game");
+            break;
+        }
+    }  
+}
+
+// play starts the game, returns true if the user won the game, otherwise returns false
+fn play() -> bool{
     let word = select_word();
     print!("-- Word to play: [{}]-- \n", word);
     let mut remaining_tries = MAX_TRIES;
@@ -25,7 +42,7 @@ fn main() {
     loop {
         // TODO: Create a function that check each value of map and if all of them are 0 then the user won the game
         if remaining_tries < 1 {
-            break println!("You lost!");
+            return false
         }
         let user_input = read_user_input();
         print!("{}", user_input);
@@ -41,7 +58,8 @@ fn main() {
         }
         println!("Remaining tries: {}", remaining_tries)
     }
-    println!("End of game")
+    // FIXME: yeah. fixme.
+    //true
 }
 
 fn read_user_input() -> String {
@@ -73,9 +91,9 @@ fn select_word() -> &'static str {
 fn transform_word_to_map(word: String) -> HashMap<char, i8> {
     let mut letters_map = HashMap::new();
     for l in word.chars() {
-        let mut currValue = letters_map.get(&l).copied().unwrap_or(0);
-        currValue+=1;
-        letters_map.insert(l, currValue);
+        let mut current_value = letters_map.get(&l).copied().unwrap_or(0);
+        current_value+=1;
+        letters_map.insert(l, current_value);
     }
     letters_map
 }
