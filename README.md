@@ -1,7 +1,6 @@
 # Hangman in rust
 
 ## Todo list
-- Store score
 - Print out different states of the game
 - Use env variable for max tries
 
