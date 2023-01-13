@@ -5,12 +5,12 @@ use std::collections::HashMap;
 use std::collections::hash_map::Entry::Occupied;
 
 
-const AVAILABLE_WORDS: [&str; 5] = [
-    "fish",
+const AVAILABLE_WORDS: [&str; 1] = [
+    //"fish",
     "pizza",
-    "bed",
-    "shirt",
-    "laptop",
+    //"bed",
+    //"shirt",
+    //"laptop",
 ];
 
 const MAX_TRIES: i32 = 2;
@@ -38,10 +38,9 @@ fn play() -> bool{
     let mut remaining_tries = MAX_TRIES;
     let mut word_as_map = transform_word_to_map(word.to_string());
 
-    loop {
-        // TODO: Create a function that check each value of map and if all of them are 0 then the user won the game
+   let result: bool = loop {
         if remaining_tries < 1 {
-            return false
+            break false
         }
         let user_input = read_user_input();
         print!("{}", user_input);
@@ -50,15 +49,30 @@ fn play() -> bool{
                 .chars()
                 .next()
                 .expect("string is empty")
+
             , &mut word_as_map);
         println!("{success}");
         if !success {
             remaining_tries -= 1;
         }
+        let victory = check_victory(&word_as_map);
+        if victory {
+            println!("Congratulations you had won the game!!");
+            break true
+        }
         println!("Remaining tries: {}", remaining_tries)
+    };
+    result
+}
+
+// check_victory Checks key by key in map to if there are negative values.
+fn check_victory(word: &HashMap<char, i8>) -> bool {
+    for (key, value) in word.iter() {
+        if *value != 0 {
+            return false
+        }
     }
-    // FIXME: yeah. fixme.
-    //true
+    true
 }
 
 fn read_user_input() -> String {
@@ -70,11 +84,12 @@ fn read_user_input() -> String {
     input
 }
 
-// Search for a letter existed in the current word
+// Search for a letter existed in the current word. If the letter exists in the word, then the
+// letters count is reducced
 fn search_letter_in_word(letter: char, word: &mut HashMap<char, i8>) -> bool {
     if let Occupied(mut entry) = word.entry(letter) {
-        entry.insert(entry.get() - 1);
-        return true
+        entry.insert(0);
+        return true;
     }
     false
 }
