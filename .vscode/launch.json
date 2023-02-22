@@ -20,6 +20,9 @@
                 }
             },
             "args": [],
+            "env": {
+                "MAX_TRIES": "5",
+            },
             "cwd": "${workspaceFolder}"
         },
         {

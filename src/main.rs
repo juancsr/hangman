@@ -3,6 +3,7 @@ use rand::Rng;
 use rand::thread_rng;
 use std::collections::HashMap;
 use std::collections::hash_map::Entry::Occupied;
+use std::env;
 
 
 const AVAILABLE_WORDS: [&str; 1] = [
@@ -12,8 +13,6 @@ const AVAILABLE_WORDS: [&str; 1] = [
     //"shirt",
     //"laptop",
 ];
-
-const MAX_TRIES: i32 = 2;
 
 fn main() {
     loop {
@@ -31,11 +30,27 @@ fn main() {
     }  
 }
 
+// get_max_tries read from the env variables the max amount of tries
+fn get_max_tries() -> i32 {
+    const ENV_VAR_NAME: &str = "MAX_TRIES";
+    let mut max_tries: i32 = 0;
+    match env::var(ENV_VAR_NAME) {
+        Ok(v) => // convert v into i32
+            match v.parse::<i32>() {
+                Ok(v) => max_tries = v,
+                Err(e) => panic!("{} is not a valid number ({})", v, e)
+            }
+        Err(e) => panic!("${} is not set ({})", ENV_VAR_NAME, e)
+    }
+    max_tries
+}
+
 // play starts the game, returns true if the user won the game, otherwise returns false
 fn play() -> bool{
     let word = select_word();
     print!("-- Word to play: [{}]-- \n", word);
-    let mut remaining_tries = MAX_TRIES;
+    let mut remaining_tries = get_max_tries();
+    print!("MAX_TRIES: {}\n", remaining_tries);
     let mut word_as_map = transform_word_to_map(word.to_string());
 
    let result: bool = loop {
